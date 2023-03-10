@@ -5,7 +5,7 @@ const app = express();
 const manager = new ProductManager();
 const products = await manager.getProducts();
 
-app.get("/products/", (req, res) => {
+app.get("/api/products/", (req, res) => {
 	res.setHeader("Content-Type", "application/json");
 
 	let limit = parseInt(req.query.limit);
@@ -14,7 +14,7 @@ app.get("/products/", (req, res) => {
 	return res.end(JSON.stringify({ result: limitedProducts }, null, 3));
 });
 
-app.get("/products/:pid", (req, res) => {
+app.get("/api/products/:pid", (req, res) => {
 	res.setHeader("Content-Type", "application/json");
 
 	let productId = parseInt(req.params.pid);
