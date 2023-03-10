@@ -1,9 +1,15 @@
-import ProductManager from "./ProductManager.js";
 import express from "express";
+import productsRouter from "./routes/products.router.js";
+import cartsRouter from "./routes/carts.router.js";
 
 const app = express();
-const manager = new ProductManager();
-const products = await manager.getProducts();
+
+app.use(express.json());
+
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
+
+/*
 
 app.get("/api/products/", (req, res) => {
 	res.setHeader("Content-Type", "application/json");
@@ -25,6 +31,7 @@ app.get("/api/products/:pid", (req, res) => {
 
 	return res.end(JSON.stringify({ result: response }, null, 3));
 });
+*/
 
 app.listen(8080, () => {
 	console.log("Servidor arriba en el puerto 8080");
