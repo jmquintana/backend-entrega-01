@@ -3,17 +3,23 @@ import { Router } from "express";
 // import { uploader } from "../utils.js";
 
 const router = Router();
-
 const manager = new ProductManager();
 const products = await manager.getProducts();
 
 router.get("/", (req, res) => {
-	res.setHeader("Content-Type", "application/json");
-
 	let limit = parseInt(req.query.limit);
 	let limitedProducts = limit ? products.slice(0, limit) : products;
+	return res.send({ status: "Success", result: limitedProducts });
+});
 
-	return res.end(JSON.stringify({ result: limitedProducts }, null, 3));
+router.get("/:pid", (req, res) => {
+	let productId = parseInt(req.params.pid);
+	let filteredProducts = products.filter((product) => product.id === productId);
+	let result = filteredProducts.length
+		? filteredProducts[0]
+		: "Product missing!";
+
+	return res.send({ status: "Success", result });
 });
 
 // router.get("/", (req, res) => {
