@@ -12,32 +12,29 @@ router.get("/", (req, res) => {
 	return res.send({ status: "Success", result: limitedProducts });
 });
 
-router.get("/:pid", (req, res) => {
+router.get("/:pid", async (req, res) => {
 	let productId = parseInt(req.params.pid);
-	let filteredProducts = products.filter((product) => product.id === productId);
-	let result = filteredProducts.length
-		? filteredProducts[0]
-		: "Product missing!";
 
-	return res.send({ status: "Success", result });
+	const result = await manager.getProductById(productId);
+	return res.send(result);
 });
 
-// router.get("/", (req, res) => {
-// 	res.send({ status: "Success", payload: products });
-// });
+router.post("/", async (req, res) => {
+	let product = req.body;
+	const result = await manager.addProduct(product);
 
-// router.post("/", uploader.single("file"), (req, res) => {
-// 	if (!req.file) {
-// 		return res
-// 			.status(400)
-// 			.send({ status: "Error", payload: "No se pudo guardar la imagen" });
-// 	}
+	if (result.status === "Added") {
+		res.send({ status: "Success", result: "Product added" });
+	} else {
+		res.send({ status: result.status, result: result.message });
+	}
+});
 
-// 	let product = req.body;
-
-// 	product.thumbnail = req.file.path;
-// 	products.push(product);
-// 	res.send({ status: "Success", payload: "Product added" });
-// });
+router.put("/:pid", async (req, res) => {
+	const productId = parseInt(req.params.pid);
+	const changes = req.body;
+	const result = await manager.updateProduct(productId, changes);
+	res.send(result);
+});
 
 export default router;

@@ -39,42 +39,44 @@ export default class ProductManager {
 			}
 			products.push(newProduct);
 		} else {
-			console.log("# Product already exist! You may update it.");
-			return;
+			const message = "# Product already exist! You may update it.";
+			console.log(message);
+			return { status: "Rejected", message };
 		}
 
 		await this.#writeFile(products);
-		return newProduct;
+		return { status: "Added", newProduct };
 	};
 
 	getProductById = async (productId) => {
 		if (fs.existsSync(this.path)) {
-			// const data = await fs.promises.readFile(this.path, "utf-8");
 			const data = await this.#readFile(this.path);
-			const result = JSON.parse(data);
-			const productIndex = result.findIndex(
+			const json = JSON.parse(data);
+			const productIndex = json.findIndex(
 				(product) => product.id === productId
 			);
 
 			if (productIndex === -1) {
-				console.error("# Product missing!");
-				return;
+				const message = "# Product missing!";
+				console.error(message);
+				return { status: "Rejected", message };
 			} else {
-				return result[productIndex];
+				const result = json[productIndex];
+				return { status: "Success", result };
 			}
 		} else {
-			return [];
+			return { status: "Success", result: [] };
 		}
 	};
 
 	updateProduct = async (productId, newProperties) => {
 		const product = await this.getProductById(productId);
 		const products = await this.getProducts();
-		if (!product) {
-			return;
+		if (product.status === "Rejected") {
+			return product;
 		} else {
 			const updatedProduct = {
-				...product,
+				...product.result,
 				...newProperties,
 			};
 			updatedProduct.id = productId;
@@ -84,7 +86,7 @@ export default class ProductManager {
 			products[productIndex] = updatedProduct;
 			await this.#writeFile(products);
 			console.log("# Product updated!");
-			return updatedProduct;
+			return { status: "Updated", updatedProduct };
 		}
 	};
 
