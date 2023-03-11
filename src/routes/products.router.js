@@ -37,4 +37,10 @@ router.put("/:pid", async (req, res) => {
 	res.send(result);
 });
 
+router.delete("/:pid", async (req, res) => {
+	const productId = parseInt(req.params.pid);
+	const result = await manager.deleteProduct(productId);
+	res.send(result);
+});
+
 export default router;

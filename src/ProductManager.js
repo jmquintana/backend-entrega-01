@@ -92,13 +92,20 @@ export default class ProductManager {
 
 	deleteProduct = async (productId) => {
 		const product = await this.getProductById(productId);
-		const products = await this.getProducts();
-		const newProducts = products.filter((element) => element.id !== productId);
-		await this.#writeFile(newProducts);
+		if (product.status === "Rejected") {
+			return product;
+		} else {
+			const products = await this.getProducts();
+			const newProducts = products.filter(
+				(element) => element.id !== productId
+			);
+			await this.#writeFile(newProducts);
 
-		if (products.length - newProducts.length > 0)
-			console.log("# Product deleted!");
-
-		return product;
+			if (products.length - newProducts.length > 0) {
+				const message = "# Product deleted!";
+				console.log(message);
+				return { status: "Success", message };
+			}
+		}
 	};
 }
