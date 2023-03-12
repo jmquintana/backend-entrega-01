@@ -58,7 +58,7 @@ export default class CartManager {
 	addProductToCart = async (productId, cartId) => {
 		// check if cart exists
 		const cart = await this.getCartById(cartId);
-		if (!cart.status === "Success")
+		if (!(cart.status === "Success"))
 			return { status: "Error", message: "Cart not found!" };
 		// check if product exists
 		const product = await productManager.getProductById(productId);
@@ -82,5 +82,6 @@ export default class CartManager {
 		const cartIndex = carts.findIndex((cart) => cart.id === cartId);
 		carts[cartIndex] = cart.result;
 		await this.#writeFile(carts);
+		return { status: "Success", result: cart.result };
 	};
 }
