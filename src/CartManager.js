@@ -67,7 +67,7 @@ export default class CartManager {
 			return { status: "Error", message: "Product not found!" };
 		// check if product has stock
 		if (product.result.stock < 1)
-			return { status: "Error", message: "Product without stock" };
+			return { status: "Error", message: "Product out of stock!" };
 		// check if product exists in cart
 		const productIndex = cart.result.products.findIndex(
 			(product) => product.id === productId

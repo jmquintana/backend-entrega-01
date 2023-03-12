@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
 	if (result.status === "Added") {
 		res.send({ status: "Success", result: "Product added" });
 	} else {
-		res.send({ status: result.status, result: result.message });
+		res.send(result);
 	}
 });
 

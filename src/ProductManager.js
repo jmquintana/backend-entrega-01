@@ -11,6 +11,46 @@ export default class ProductManager {
 
 	#readFile = async (filePath) => await fs.promises.readFile(filePath, "utf-8");
 
+	#isValidProduct = (product) => {
+		const hasTitle = product.title !== "";
+		const hasDescription = product.description !== "";
+		const hasCode = product.code !== "";
+		const hasPrice = product.price >= 0;
+		const hasStock = product.stock > -1;
+		const hasCategory = product.category ?? "" !== "";
+		console.log(product.category);
+
+		if (
+			!(
+				hasTitle &&
+				hasDescription &&
+				hasCode &&
+				hasPrice &&
+				hasStock &&
+				hasCategory
+			)
+		) {
+			return {
+				status: false,
+				response: {
+					message: "Invalid product!",
+					detail: {
+						hasTitle,
+						hasDescription,
+						hasCode,
+						hasPrice,
+						hasStock,
+						hasCategory,
+					},
+				},
+			};
+		} else {
+			return {
+				status: true,
+			};
+		}
+	};
+
 	getProducts = async () => {
 		if (!fs.existsSync(this.path)) return [];
 		try {
@@ -25,8 +65,16 @@ export default class ProductManager {
 	};
 
 	addProduct = async (newProduct) => {
-		const products = await this.getProducts();
+		// check if it is a valid product
+		const isValidProduct = this.#isValidProduct(newProduct);
+		if (!isValidProduct.status)
+			return {
+				status: "Rejected",
+				result: isValidProduct.response,
+			};
 
+		newProduct.status = newProduct.stock > 0;
+		const products = await this.getProducts();
 		const productIndex = products.findIndex(
 			(product) => product.code === newProduct.code
 		);
