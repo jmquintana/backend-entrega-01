@@ -42,7 +42,7 @@ Para el carrito, el cual tendrá su router en `/api/carts/`, configurar dos ruta
 
 Además, si un producto ya existente intenta agregarse al producto, incrementar el campo quantity de dicho producto.
 
-La persistencia de la información se implementará utilizando el *file system*, donde los archivos `productos.json` y `carrito.json`, respaldan la información.
+La persistencia de la información se implementará utilizando el *file system*, donde los archivos `products.json` y `carts.json`, respaldan la información.
 
 No es necesario realizar ninguna implementación visual, todo el flujo se puede realizar por **Postman** o por el cliente de tu preferencia.
 

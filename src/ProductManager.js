@@ -65,7 +65,7 @@ export default class ProductManager {
 				return { status: "Success", result };
 			}
 		} else {
-			return { status: "Success", result: [] };
+			return { status: "Empty", result: [] };
 		}
 	};
 
