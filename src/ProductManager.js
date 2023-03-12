@@ -12,11 +12,11 @@ export default class ProductManager {
 	#readFile = async (filePath) => await fs.promises.readFile(filePath, "utf-8");
 
 	#isValidProduct = (product) => {
-		const hasTitle = product.title !== "";
-		const hasDescription = product.description !== "";
-		const hasCode = product.code !== "";
+		const hasTitle = product.title ?? "" !== "";
+		const hasDescription = product.description ?? "" !== "";
+		const hasCode = product.code ?? "" !== "";
 		const hasPrice = product.price >= 0;
-		const hasStock = product.stock > -1;
+		const hasStock = product.stock > 0;
 		const hasCategory = product.category ?? "" !== "";
 		console.log(product.category);
 
@@ -59,7 +59,7 @@ export default class ProductManager {
 			const result = JSON.parse(data);
 			return result;
 		} catch (error) {
-			console.log(`# Error reading file. ${error}`);
+			console.log(`Error reading file. ${error}`);
 			return [];
 		}
 	};
@@ -87,7 +87,7 @@ export default class ProductManager {
 			}
 			products.push(newProduct);
 		} else {
-			const message = "# Product already exist! You may update it.";
+			const message = "Product already exist! You may update it.";
 			console.log(message);
 			return { status: "Rejected", message };
 		}
@@ -105,7 +105,7 @@ export default class ProductManager {
 			);
 
 			if (productIndex === -1) {
-				const message = "# Product missing!";
+				const message = "Product missing!";
 				console.error(message);
 				return { status: "Rejected", message };
 			} else {
@@ -128,12 +128,13 @@ export default class ProductManager {
 				...newProperties,
 			};
 			updatedProduct.id = productId;
+			updatedProduct.status = updatedProduct.stock > 0;
 			const productIndex = products.findIndex(
 				(product) => product.id === productId
 			);
 			products[productIndex] = updatedProduct;
 			await this.#writeFile(products);
-			console.log("# Product updated!");
+			console.log("Product updated!");
 			return { status: "Updated", updatedProduct };
 		}
 	};
@@ -150,7 +151,7 @@ export default class ProductManager {
 			await this.#writeFile(newProducts);
 
 			if (products.length - newProducts.length > 0) {
-				const message = "# Product deleted!";
+				const message = "Product deleted!";
 				console.log(message);
 				return { status: "Success", message };
 			}

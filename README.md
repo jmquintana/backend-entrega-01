@@ -40,7 +40,7 @@ Para el carrito, el cual tendrá su router en `/api/carts/`, configurar dos ruta
     - `product`: SÓLO DEBE CONTENER EL `id` DEL PRODUCTO (Es crucial que no agregues el producto completo).
     - `quantity`: debe contener el número de ejemplares de dicho producto. El producto, de momento, se agregará de uno en uno.
 
-Además, si un producto ya existente intenta agregarse al producto, incrementar el campo quantity de dicho producto.
+Además, si un producto ya existente intenta agregarse al carrito, incrementar el campo quantity de dicho producto.
 
 La persistencia de la información se implementará utilizando el *file system*, donde los archivos `products.json` y `carts.json`, respaldan la información.
 
